@@ -1,0 +1,13 @@
+streamlit
+langchain>=1.2.15
+langchain-google-genai>=4.2.2
+langchain-community>=0.4.1
+langchain-huggingface>=1.2.1
+langchain-classic>=1.0.3
+langchain-chroma>=1.1.0
+google-generativeai
+python-dotenv
+chromadb
+pypdf
+langchain-text-splitters
+sentence-transformers

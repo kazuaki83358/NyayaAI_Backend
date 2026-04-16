@@ -1,0 +1,49 @@
+==========================================================
+PROJECT: INDIAN LAW AI AGENT - INTERVIEW PREP GUIDE
+==========================================================
+
+1. PROJECT OVERVIEW
+-------------------
+This project is a Retrieval-Augmented Generation (RAG) based AI Assistant designed to help users navigate Indian Legal Documents (BNS, BNSS, Sakshya, and the Constitution of India). It indexes PDF documents into a local vector database and uses a Large Language Model (LLM) to provide expert legal answers with specific citations.
+
+2. CORE COMPONENTS & PROGRAMS
+-----------------------------
+A. app.py (The Frontend):
+   - Built with Streamlit.
+   - Manages UI, chat history, and triggers the indexing process.
+
+B. agent.py (The Brain):
+   - Loading: PyPDFLoader (LangChain) for legal PDFs.
+   - Splitting: RecursiveCharacterTextSplitter (1000 char chunks).
+   - Embeddings (CRITICAL): HuggingFaceEmbeddings ('all-MiniLM-L6-v2'). 
+     *NOTE: We used local embeddings to bypass API rate limits and cost.*
+   - Vector Store: ChromaDB (persistent local storage).
+   - LLM: ChatGoogleGenerativeAI using 'gemini-flash-latest'.
+   - Custom Personality: Uses a PromptTemplate to force the AI to act as a "Specialized Indian Law Assistant" and cite sources.
+
+C. requirements.txt:
+   - Includes specific versions: langchain-classic, langchain-huggingface, sentence-transformers, torchvision.
+
+3. PROBLEMS FACED & SOLUTIONS (FOR INTERVIEW)
+---------------------------------------------
+- IMPORT ERRORS: Resolved by switching to 'langchain_classic' and 'langchain_core' paths after the LangChain v0.3/v1.0 migration.
+- RATE LIMITS (429): Solved by moving from Online Google Embeddings to Local HuggingFace Embeddings.
+- 404 MODEL ERRORS: Fixed by identifying 'gemini-flash-latest' as the stable model alias for the current API region.
+- WINDOWS FILE LOCKS: Fixed by ensuring the Chroma database is not auto-initialized on import, allowing clean deletion/re-indexing.
+- INDENTATION/SYNTAX: Fixed errors caused by misaligned return statements during personality prompt integration.
+
+4. UNIQUE SELLING POINTS (USP)
+------------------------------
+- Law Agent Persona: Doesn't answer as a general AI; it answers as a legal expert.
+- Privacy & Cost: Local indexing means the user's data isn't uploaded for embedding, and it's free to index thousands of pages.
+- Citation-Focused: Optimized to prioritize facts found in the provided legal PDFs.
+
+5. TOP 5 TEST QUESTIONS FOR DEMO
+--------------------------------
+1. "What is the punishment for murder under Section 103 of the BNS?"
+2. "Explain the procedure for 'Zero FIR' under the BNSS."
+3. "Which article of the Constitution deals with the Right to Equality?"
+4. "What is the status of a confession made to police in custody under the Sakshya Adhiniyam?"
+5. "What are the new rules for community service as a punishment in BNS?"
+
+==========================================================

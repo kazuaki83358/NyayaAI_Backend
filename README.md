@@ -36,6 +36,20 @@ GOOGLE_API_KEY=your_gemini_api_key_here
 streamlit run app.py
 ```
 
+### 6. Deploy on Render
+This repo includes a [`render.yaml`](render.yaml) blueprint for Render.
+
+1. Push the project to GitHub.
+2. In Render, create a new `Web Service` from the repository.
+3. Set the environment to use the blueprint, or copy these values if you deploy manually:
+	- Build command: `pip install -r requirements.txt`
+	- Start command: `streamlit run app.py --server.port $PORT --server.address 0.0.0.0 --server.headless true`
+	- Python version: `3.11.9`
+4. Add a secret environment variable named `GOOGLE_API_KEY` with your Gemini API key.
+5. Deploy and wait for the first build to finish. The initial boot can take a while because the app loads the PDFs and builds the Chroma index.
+
+For a smooth demo, use the paid starter plan or expect the free service to sleep between visits.
+
 ## 🏗️ Architecture
 1. **Document Loading**: `PyPDFLoader` reads PDFs from the `data/` folder.
 2. **Text Splitting**: `RecursiveCharacterTextSplitter` breaks documents into manageable chunks.

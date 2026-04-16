@@ -4,6 +4,8 @@ Nyaya AI is a high-performance legal assistant backend powered by **Retrieval-Au
 
 Designed as a robust Flask backend, it is ready to serve as the intelligence layer for Android applications or web interfaces.
 
+![Nyaya AI Screenshot](image.png)
+
 ---
 
 ## 🚀 Key Features

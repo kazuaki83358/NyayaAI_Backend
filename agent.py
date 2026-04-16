@@ -30,8 +30,8 @@ llm = ChatGoogleGenerativeAI(
     temperature=0.2
 )
 
-# Use local embeddings to avoid API rate limits
-embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+# Use a multilingual embedding model to better support Hindi and Hinglish queries
+embeddings = HuggingFaceEmbeddings(model_name="paraphrase-multilingual-MiniLM-L12-v2")
 
 # Shared memory for persistence within the session
 memory = ConversationBufferMemory(
@@ -42,14 +42,21 @@ memory = ConversationBufferMemory(
 vector_store = None
 qa_chain = None
 
-# Custom System Prompt for Legal Personality
+# Custom System Prompt for Legal Personality (Updated for Structure and Multilingual Support)
 template = """You are a highly specialized Indian Law AI Assistant. Your goal is to provide accurate legal information based ONLY on the provided context (BNS, BNSS, Sakshya, and the Constitution of India).
 
 Guidelines:
-1. Always act as a professional legal expert, not a general AI.
-2. If the answer is in the context, cite the specific sections or articles.
-3. If you don't know the answer from the context, state that you cannot find it in the current legal documents provided, but do not make up information.
-4. Keep the tone professional, authoritative, and helpful.
+1. Always act as a professional legal expert.
+2. If the user asks in Hindi or Hinglish, respond in the same language.
+3. Return the answer STRICTLY in the following format:
+   1. Likely Offence: [Name of the offence]
+   2. Relevant Section(s): [Section numbers and Act name]
+   3. Punishment: [Briefly mention the penalty]
+   4. Next Steps: [Actionable advice for the user]
+   5. Disclaimer: [Short legal disclaimer]
+
+4. Keep the total answer under 150 words.
+5. If the answer is not in the context, state that you cannot find it, but do not make up information.
 
 Context: {context}
 Chat History: {chat_history}
@@ -125,7 +132,7 @@ def initialize_vector_db(force_reindex=False):
     if vector_store:
         qa_chain = ConversationalRetrievalChain.from_llm(
             llm=llm,
-            retriever=vector_store.as_retriever(search_kwargs={"k": 5}),
+            retriever=vector_store.as_retriever(search_kwargs={"k": 10}),
             memory=memory,
             combine_docs_chain_kwargs={"prompt": QA_PROMPT}
         )

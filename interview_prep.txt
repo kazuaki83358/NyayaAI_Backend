@@ -32,13 +32,24 @@ C. requirements.txt:
 - WINDOWS FILE LOCKS: Fixed by ensuring the Chroma database is not auto-initialized on import, allowing clean deletion/re-indexing.
 - INDENTATION/SYNTAX: Fixed errors caused by misaligned return statements during personality prompt integration.
 
-4. UNIQUE SELLING POINTS (USP)
+4. CURRENT RELEVANCE & PROBLEM STATEMENT
+----------------------------------------
+- TRANSITION PHASE: India has recently transitioned from the colonial-era Indian Penal Code (IPC) and Code of Criminal Procedure (CrPC) to the modern Bharatiya Nyaya Sanhita (BNS) and Bharatiya Nagarik Suraksha Sanhita (BNSS) (2023/2024).
+- THE CHALLENGE: This transition has created significant confusion among lawyers, students, and citizens who are accustomed to the old section numbers and terminology.
+- THE SOLUTION (NayaAI): This app acts as a bridge, helping users quickly adapt to the new laws by providing instant, accurate answers and citations from the updated statutes.
+
+- FULL FORMS:
+  - BNS: Bharatiya Nyaya Sanhita (replacing the Indian Penal Code - IPC)
+  - BNSS: Bharatiya Nagarik Suraksha Sanhita (replacing the Code of Criminal Procedure - CrPC)
+  - BSA: Bharatiya Sakshya Adhiniyam (replacing the Indian Evidence Act)
+
+5. UNIQUE SELLING POINTS (USP)
 ------------------------------
 - Law Agent Persona: Doesn't answer as a general AI; it answers as a legal expert.
 - Privacy & Cost: Local indexing means the user's data isn't uploaded for embedding, and it's free to index thousands of pages.
 - Citation-Focused: Optimized to prioritize facts found in the provided legal PDFs.
 
-5. TOP 5 TEST QUESTIONS FOR DEMO
+6. TOP 5 TEST QUESTIONS FOR DEMO
 --------------------------------
 1. "What is the punishment for murder under Section 103 of the BNS?"
 2. "Explain the procedure for 'Zero FIR' under the BNSS."

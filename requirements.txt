@@ -1,4 +1,6 @@
-streamlit>=1.33.0
+flask
+flask-cors
+gunicorn
 python-dotenv>=1.0.1
 langchain>=0.2.17,<0.3.0
 langchain-community>=0.2.19,<0.3.0

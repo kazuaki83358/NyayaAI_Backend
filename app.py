@@ -1,53 +1,33 @@
-import streamlit as st
+from flask import Flask, render_template, request, jsonify
+from flask_cors import CORS
 from agent import run_agent, initialize_vector_db
 import os
+from dotenv import load_dotenv
 
-# UI Page Config
-st.set_page_config(page_title="Indian Law AI Agent ⚖️", layout="wide")
+load_dotenv()
 
-st.title("Indian Law AI Assistant ⚖️🇮🇳")
-st.markdown("""
-Welcome to your AI-powered legal assistant. This agent uses **Retrieval-Augmented Generation (RAG)** to answer queries based on official Indian legal documents.
-""")
+app = Flask(__name__)
+CORS(app)
 
-# Sidebar for Setup Instructions
-with st.sidebar:
-    st.header("Project Setup Guide 📚")
-    st.write("1. Add your legal PDF files into the **`data/`** folder.")
-    st.write("2. Ensure your **`.env`** file has a valid `GOOGLE_API_KEY`.")
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/chat', methods=['POST'])
+def chat():
+    user_input = request.json.get('message')
+    if not user_input:
+        return jsonify({"error": "No message provided"}), 400
     
-    if st.button("🚀 Process / Re-index Documents"):
-        with st.spinner("Processing PDFs and building vector database..."):
-            success, message = initialize_vector_db(force_reindex=True)
-            if success:
-                st.success(message)
-            else:
-                st.error(message)
+    response = run_agent(user_input)
+    return jsonify({"response": response})
 
-    st.divider()
-    st.info("Currently, this agent can help with: \n- Constitutional Rights \n- Criminal Laws (IPC/BNS) \n- Civil Procedures \n- Family Law \n- Legal Definitions")
+@app.route('/reindex', methods=['POST'])
+def reindex():
+    success, message = initialize_vector_db(force_reindex=True)
+    return jsonify({"success": success, "message": message})
 
-# Session State for Chat
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-
-# Display chat history
-for role, msg in st.session_state.messages:
-    with st.chat_message(role):
-        st.markdown(msg)
-
-# Chat Input
-user_input = st.chat_input("Ask a legal question (e.g., 'What are fundamental rights?')")
-
-if user_input:
-    # Display user message
-    with st.chat_message("user"):
-        st.markdown(user_input)
-    st.session_state.messages.append(("user", user_input))
-
-    # Agent Response
-    with st.chat_message("assistant"):
-        with st.spinner("Searching legal documents..."):
-            response = run_agent(user_input)
-            st.markdown(response)
-            st.session_state.messages.append(("assistant", response))
+if __name__ == '__main__':
+    # Initialize DB on startup (not forcing reindex)
+    initialize_vector_db()
+    app.run(debug=True, port=int(os.environ.get('PORT', 5000)))

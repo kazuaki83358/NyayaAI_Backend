@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nyaya AI | Indian Law Assistant ⚖️</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .serif { font-family: 'Playfair Display', serif; }
+        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .bg-legal { background-color: #0f172a; } /* Deep Navy */
+        .text-gold { color: #d4af37; }
+        .border-gold { border-color: #d4af37; }
+        .chat-container { height: calc(100vh - 180px); }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-80 bg-legal text-white flex flex-col hidden lg:flex border-r border-slate-800">
+            <div class="p-8 border-b border-slate-800">
+                <h1 class="serif text-3xl text-gold mb-2">Nyaya AI</h1>
+                <p class="text-xs text-slate-400 tracking-widest uppercase">Indian Law Intelligence</p>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto p-6 space-y-8">
+                <div>
+                    <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">Core Knowledge</h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-center text-slate-300">
+                            <span class="w-2 h-2 bg-gold rounded-full mr-3"></span>
+                            BNS & BNSS (2023)
+                        </li>
+                        <li class="flex items-center text-slate-300">
+                            <span class="w-2 h-2 bg-gold rounded-full mr-3"></span>
+                            Indian Constitution
+                        </li>
+                        <li class="flex items-center text-slate-300">
+                            <span class="w-2 h-2 bg-gold rounded-full mr-3"></span>
+                            Evidence Act (Sakshya)
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-slate-800/50 rounded-xl p-5 border border-slate-700">
+                    <h3 class="text-sm font-semibold text-gold mb-2">Admin Tools</h3>
+                    <p class="text-xs text-slate-400 mb-4">Re-sync your local legal database if PDFs are added or changed.</p>
+                    <button id="reindex-btn" class="w-full bg-gold hover:bg-yellow-600 text-legal font-bold py-2.5 px-4 rounded-lg transition-all duration-300 transform active:scale-95 shadow-lg">
+                        Sync Database
+                    </button>
+                    <div id="reindex-status" class="mt-3 text-[10px] text-center font-medium"></div>
+                </div>
+            </div>
+
+            <div class="p-6 border-t border-slate-800 text-[10px] text-slate-500 text-center">
+                &copy; 2026 Nyaya AI. For Information Only.
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col relative bg-white">
+            <!-- Header -->
+            <header class="glass sticky top-0 z-10 px-8 py-4 border-b border-slate-200 flex justify-between items-center">
+                <div class="lg:hidden serif text-2xl text-legal font-bold">Nyaya AI</div>
+                <div class="hidden lg:block text-sm font-medium text-slate-500 italic">"Let justice be done though the heavens should fall."</div>
+                <div class="flex items-center space-x-2">
+                    <span class="flex h-2 w-2 rounded-full bg-green-500"></span>
+                    <span class="text-xs font-semibold text-slate-600 uppercase tracking-tighter">System Ready</span>
+                </div>
+            </header>
+
+            <!-- Chat Area -->
+            <div id="chat-history" class="chat-container overflow-y-auto px-6 py-8 space-y-6">
+                <!-- System Greeting -->
+                <div class="flex justify-start">
+                    <div class="max-w-[85%] lg:max-w-[70%] bg-slate-100 text-slate-800 rounded-2xl rounded-tl-none px-5 py-4 shadow-sm border border-slate-200">
+                        <p class="text-sm leading-relaxed">
+                            Greetings. I am your <strong>Nyaya AI Assistant</strong>. I am trained on official Indian legal codices including the BNS, BNSS, Sakshya, and the Constitution. 
+                            <br><br>
+                            How may I assist your legal inquiry today?
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="p-6 border-t border-slate-100 bg-white">
+                <div class="max-w-4xl mx-auto flex items-center gap-3">
+                    <div class="flex-1 relative">
+                        <input type="text" id="user-input" 
+                               placeholder="Ask about rights, sections, or punishments..." 
+                               class="w-full pl-4 pr-12 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-gold/50 focus:border-gold transition-all shadow-inner text-sm">
+                        <button id="send-btn" class="absolute right-2 top-1.5 p-2 text-legal hover:text-gold transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <p class="mt-2 text-center text-[10px] text-slate-400">Response time may vary based on document complexity.</p>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const chatHistory = document.getElementById('chat-history');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+        const reindexBtn = document.getElementById('reindex-btn');
+        const reindexStatus = document.getElementById('reindex-status');
+
+        function appendMessage(role, message) {
+            const isUser = role === 'user';
+            const div = document.createElement('div');
+            div.className = `flex ${isUser ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2 duration-300`;
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = `max-w-[85%] lg:max-w-[70%] px-5 py-4 rounded-2xl shadow-sm text-sm leading-relaxed ${
+                isUser 
+                ? 'bg-legal text-white rounded-tr-none' 
+                : 'bg-slate-100 text-slate-800 rounded-tl-none border border-slate-200'
+            } whitespace-pre-wrap`;
+            
+            contentDiv.innerHTML = message.replace(/\n/g, '<br>');
+            
+            div.appendChild(contentDiv);
+            chatHistory.appendChild(div);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            appendMessage('user', message);
+            userInput.value = '';
+            
+            // Loading indicator
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'flex justify-start';
+            loadingDiv.innerHTML = `
+                <div class="bg-slate-100 text-slate-500 rounded-2xl rounded-tl-none px-5 py-3 border border-slate-200 flex items-center space-x-2">
+                    <div class="flex space-x-1">
+                        <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"></div>
+                        <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:-.3s]"></div>
+                        <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:-.5s]"></div>
+                    </div>
+                    <span class="text-xs font-medium italic">Consulting legal codex...</span>
+                </div>`;
+            chatHistory.appendChild(loadingDiv);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message })
+                });
+                const data = await response.json();
+                
+                chatHistory.removeChild(loadingDiv);
+                appendMessage('assistant', data.response || data.error || "An error occurred.");
+            } catch (error) {
+                chatHistory.removeChild(loadingDiv);
+                appendMessage('assistant', 'System Error: Connection to Nyaya AI backend failed.');
+            }
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        reindexBtn.addEventListener('click', async () => {
+            reindexBtn.disabled = true;
+            reindexBtn.innerHTML = '<span class="flex items-center justify-center"><svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-legal" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Syncing...</span>';
+            reindexStatus.innerText = 'Analyzing PDFs & updating vector indices...';
+            reindexStatus.className = 'mt-3 text-[10px] text-center font-medium text-gold';
+
+            try {
+                const response = await fetch('/reindex', { method: 'POST' });
+                const data = await response.json();
+                
+                if (data.success) {
+                    reindexStatus.innerText = 'Database synchronization complete.';
+                    reindexStatus.className = 'mt-3 text-[10px] text-center font-medium text-green-400';
+                } else {
+                    reindexStatus.innerText = data.message;
+                    reindexStatus.className = 'mt-3 text-[10px] text-center font-medium text-red-400';
+                }
+            } catch (error) {
+                reindexStatus.innerText = 'Database sync failed.';
+                reindexStatus.className = 'mt-3 text-[10px] text-center font-medium text-red-400';
+            } finally {
+                reindexBtn.disabled = false;
+                reindexBtn.innerText = 'Sync Database';
+            }
+        });
+    </script>
+</body>
+</html>

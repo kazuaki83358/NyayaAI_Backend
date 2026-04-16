@@ -44,7 +44,7 @@ This repo includes a [`render.yaml`](render.yaml) blueprint for Render.
 3. Set the environment to use the blueprint, or copy these values if you deploy manually:
 	- Build command: `pip install -r requirements.txt`
 	- Start command: `streamlit run app.py --server.port $PORT --server.address 0.0.0.0 --server.headless true`
-	- Python version: `3.11.9`
+	- Python version: `3.11.11`
 4. Add a secret environment variable named `GOOGLE_API_KEY` with your Gemini API key.
 5. Deploy and wait for the first build to finish. The initial boot can take a while because the app loads the PDFs and builds the Chroma index.
 

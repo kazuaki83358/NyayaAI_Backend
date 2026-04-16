@@ -19,7 +19,7 @@ load_dotenv()
 # -------------------------
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 DATA_DIR = "./data"
-DB_DIR = "./chroma_db"
+DB_DIR =  "/tmp/chroma_db"
 
 # -------------------------
 # Global Objects

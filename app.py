@@ -22,6 +22,10 @@ def chat():
     response, category = run_agent(user_input)
     return jsonify({"response": response, "category": category})
 
+@app.route('/ping', methods=['GET'])
+def ping():
+    return jsonify({"status": "online", "message": "Server is reachable!"})
+
 @app.route('/reindex', methods=['POST'])
 def reindex():
     success, message = initialize_vector_db(force_reindex=True)

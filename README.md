@@ -1,3 +1,12 @@
+---
+title: Nyaya AI
+emoji: ⚖️
+colorFrom: blue
+colorTo: slate
+sdk: docker
+pinned: false
+---
+
 # Nyaya AI | Indian Law Assistant ⚖️🇮🇳
 
 Nyaya AI is a high-performance legal assistant backend powered by **Retrieval-Augmented Generation (RAG)**. It provides accurate legal information based on official Indian legal documents, including the BNS, BNSS, Sakshya, and the Constitution of India.

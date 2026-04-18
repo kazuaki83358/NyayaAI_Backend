@@ -31,10 +31,8 @@ def reindex():
     success, message = initialize_vector_db(force_reindex=True)
     return jsonify({"success": success, "message": message})
 
+# Initialize DB on startup
+initialize_vector_db()
+
 if __name__ == '__main__':
-    # Initialize DB on startup (not forcing reindex)
-    # Only initialize in the main process, not the reloader
-    if os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
-        initialize_vector_db()
-    
-    app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+    app.run(debug=False, host='0.0.0.0', port=int(os.environ.get('PORT', 7860)))

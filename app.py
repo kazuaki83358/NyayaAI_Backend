@@ -19,8 +19,8 @@ def chat():
     if not user_input:
         return jsonify({"error": "No message provided"}), 400
     
-    response = run_agent(user_input)
-    return jsonify({"response": response})
+    response, category = run_agent(user_input)
+    return jsonify({"response": response, "category": category})
 
 @app.route('/reindex', methods=['POST'])
 def reindex():
@@ -29,5 +29,8 @@ def reindex():
 
 if __name__ == '__main__':
     # Initialize DB on startup (not forcing reindex)
-    initialize_vector_db()
+    # Only initialize in the main process, not the reloader
+    if os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
+        initialize_vector_db()
+    
     app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))

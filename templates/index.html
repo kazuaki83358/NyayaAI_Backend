@@ -70,15 +70,27 @@
                     <ul class="space-y-3 text-sm">
                         <li class="flex items-center text-slate-300">
                             <span class="w-2 h-2 bg-gold rounded-full mr-3"></span>
-                            BNS & BNSS (2023)
-                        </li>
-                        <li class="flex items-center text-slate-300">
-                            <span class="w-2 h-2 bg-gold rounded-full mr-3"></span>
                             Indian Constitution
                         </li>
                         <li class="flex items-center text-slate-300">
                             <span class="w-2 h-2 bg-gold rounded-full mr-3"></span>
-                            Evidence Act (Sakshya)
+                            BNS, BNSS & Sakshya (2023)
+                        </li>
+                        <li class="flex items-center text-slate-300">
+                            <span class="w-2 h-2 bg-gold rounded-full mr-3"></span>
+                            IT Act (Cybercrime)
+                        </li>
+                        <li class="flex items-center text-slate-300">
+                            <span class="w-2 h-2 bg-gold rounded-full mr-3"></span>
+                            Consumer Protection Act
+                        </li>
+                        <li class="flex items-center text-slate-300">
+                            <span class="w-2 h-2 bg-gold rounded-full mr-3"></span>
+                            Motor Vehicles Act
+                        </li>
+                        <li class="flex items-center text-slate-300">
+                            <span class="w-2 h-2 bg-gold rounded-full mr-3"></span>
+                            Payment of Wages Act
                         </li>
                     </ul>
                 </div>
@@ -132,6 +144,15 @@
 
             <!-- Input Area -->
             <div class="p-4 lg:p-6 border-t border-slate-100 bg-white">
+                <!-- Chips -->
+                <div class="max-w-4xl mx-auto mb-4 overflow-x-auto no-scrollbar flex space-x-2 pb-2">
+                    <button class="chip px-3 py-1 bg-slate-100 hover:bg-gold hover:text-white rounded-full text-xs font-medium text-slate-600 transition-all whitespace-nowrap" onclick="setQuery('My Instagram was hacked')">Cybercrime</button>
+                    <button class="chip px-3 py-1 bg-slate-100 hover:bg-gold hover:text-white rounded-full text-xs font-medium text-slate-600 transition-all whitespace-nowrap" onclick="setQuery('I didn\'t receive my refund')">Consumer Law</button>
+                    <button class="chip px-3 py-1 bg-slate-100 hover:bg-gold hover:text-white rounded-full text-xs font-medium text-slate-600 transition-all whitespace-nowrap" onclick="setQuery('My boss is not paying me')">Labour Law</button>
+                    <button class="chip px-3 py-1 bg-slate-100 hover:bg-gold hover:text-white rounded-full text-xs font-medium text-slate-600 transition-all whitespace-nowrap" onclick="setQuery('Rights of a person being arrested')">Procedure Law</button>
+                    <button class="chip px-3 py-1 bg-slate-100 hover:bg-gold hover:text-white rounded-full text-xs font-medium text-slate-600 transition-all whitespace-nowrap" onclick="setQuery('Fundamental rights in India')">Constitution</button>
+                    <button class="chip px-3 py-1 bg-slate-100 hover:bg-gold hover:text-white rounded-full text-xs font-medium text-slate-600 transition-all whitespace-nowrap" onclick="setQuery('Challan for driving without license')">Traffic Law</button>
+                </div>
                 <div class="max-w-4xl mx-auto flex items-center gap-2 lg:gap-3">
                     <div class="flex-1 relative">
                         <input type="text" id="user-input" 
@@ -170,11 +191,26 @@
         closeSidebar.addEventListener('click', toggleSidebar);
         sidebarOverlay.addEventListener('click', toggleSidebar);
 
-        function appendMessage(role, message) {
+        function setQuery(query) {
+            userInput.value = query;
+            userInput.focus();
+        }
+
+        function appendMessage(role, message, category = null) {
             const isUser = role === 'user';
             const div = document.createElement('div');
-            div.className = `flex ${isUser ? 'justify-end' : 'justify-start'} message-fade-in`;
+            div.className = `flex flex-col ${isUser ? 'items-end' : 'items-start'} message-fade-in`;
             
+            if (category && !isUser) {
+                const badge = document.createElement('span');
+                badge.className = 'text-[9px] font-bold text-slate-400 uppercase tracking-tighter mb-1 ml-1';
+                badge.innerText = `Detected Context: ${category.replace('_', ' ')}`;
+                div.appendChild(badge);
+            }
+
+            const bubbleWrap = document.createElement('div');
+            bubbleWrap.className = `flex ${isUser ? 'justify-end' : 'justify-start'} w-full`;
+
             const contentDiv = document.createElement('div');
             contentDiv.className = `max-w-[90%] lg:max-w-[75%] px-5 py-3 lg:py-4 rounded-2xl shadow-sm text-sm leading-relaxed ${
                 isUser 
@@ -188,7 +224,8 @@
             innerDiv.innerHTML = renderedContent;
             
             contentDiv.appendChild(innerDiv);
-            div.appendChild(contentDiv);
+            bubbleWrap.appendChild(contentDiv);
+            div.appendChild(bubbleWrap);
             chatHistory.appendChild(div);
             chatHistory.scrollTop = chatHistory.scrollHeight;
         }
@@ -209,7 +246,7 @@
                         <div class="w-1 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:-.3s]"></div>
                         <div class="w-1 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:-.5s]"></div>
                     </div>
-                    <span class="text-[11px] font-medium italic">thinking...</span>
+                    <span class="text-[11px] font-medium italic">searching law documents...</span>
                 </div>`;
             chatHistory.appendChild(loadingDiv);
             chatHistory.scrollTop = chatHistory.scrollHeight;
@@ -222,7 +259,7 @@
                 });
                 const data = await response.json();
                 chatHistory.removeChild(loadingDiv);
-                appendMessage('assistant', data.response || data.error || "An error occurred.");
+                appendMessage('assistant', data.response || data.error || "An error occurred.", data.category);
             } catch (error) {
                 chatHistory.removeChild(loadingDiv);
                 appendMessage('assistant', 'System Error: Connection failed.');
